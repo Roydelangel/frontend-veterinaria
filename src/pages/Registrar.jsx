@@ -31,8 +31,12 @@ const Registrar = () => {
 
       return;
     };
+
+    setAlerta({});  
     
   };
+
+  const { msg } = alerta;
 
   return (
     <>
@@ -44,9 +48,9 @@ const Registrar = () => {
 
       <div className="mt-20 md:mt-5 shadow-lg px-5 py-10 rounded-xl bg-white">
 
-          <Alerta 
+          { msg && <Alerta 
             alerta={alerta}
-          />
+          />}
           <form onSubmit={handleSubmit}>
             <div className="my-5">
               <label className="uppercase text-gray-600 block text-xl font-bold">
