@@ -1,3 +1,73 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-grid-pattern {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.08) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+.poster-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card-hover {
+  @apply transition-all duration-300 ease-out;
+}
+
+.card-hover:hover {
+  @apply shadow-xl -translate-y-1;
+}
+
+.btn-hover {
+  @apply transition-all duration-300 ease-out;
+}
+
+.btn-hover:hover {
+  @apply scale-[1.02] shadow-lg;
+}
+
+.btn-hover:active {
+  @apply scale-[0.98];
+}
+
+.link-hover {
+  @apply transition-all duration-200 ease-out;
+}
+
+.link-hover:hover {
+  @apply text-indigo-700 translate-x-1;
+}
+
+.input-focus {
+  @apply transition-all duration-200 ease-out;
+}
+
+.input-focus:focus {
+  @apply ring-2 ring-indigo-300 border-indigo-400 shadow-sm;
+  outline: none;
+}
+
+@keyframes draw-path {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-draw {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: draw-path 2s ease-out forwards;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
