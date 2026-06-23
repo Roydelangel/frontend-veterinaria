@@ -1,7 +1,35 @@
 import { Link } from "react-router-dom";
 import PosterDeco from "../components/PosterDeco";
+import Alerta from "../components/Alerta";
+import clienteAxios from "../../config/axios";
+import { useState } from "react";
 
 const OlvidePassword = () => {
+
+  const [email, setEmail] = useState('');
+  const [alerta, setAlerta] = useState({});
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    if (email === '') {
+      setAlerta({ msg: 'El email es obligatorio', error: true});
+      return;
+    };
+
+    try {
+      const { data } = await clienteAxios.post('/veterinarios/olvide-password', { email });
+
+      setAlerta({ msg: data.msg})
+    } catch (error) {
+      setAlerta({
+        msg: error.response.data.msg,
+        error: true
+      })
+    }
+  };
+
+  const { msg } = alerta;
 
   return (
     <>
@@ -15,12 +43,20 @@ const OlvidePassword = () => {
         </div>
 
         <div className="card-hover shadow-lg px-8 py-10 rounded-xl bg-white">
-            <form>
+
+          { msg && <Alerta 
+              alerta={alerta}
+            />}
+
+            <form
+              onSubmit={handleSubmit}
+            >
               <div className="my-5">
                 <label className="uppercase text-gray-600 block text-xl font-bold">
                   Email
                 </label>
-                <input type="email" className="input-focus border w-full p-3 mt-3 bg-gray-50 rounded-xl" placeholder="Email de registro"/>
+                <input type="email" className="input-focus border w-full p-3 mt-3 bg-gray-50 rounded-xl" 
+                placeholder="Email de registro" value={email} onChange={e => setEmail(e.target.value)}/>
               </div>
 
               <input type="submit" value="Enviar email" className="btn-hover bg-indigo-700 w-full py-3 px-10 rounded-xl text-white uppercase font-bold mt-5 
