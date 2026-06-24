@@ -5,12 +5,14 @@ import Registrar from './pages/Registrar';
 import OlvidePassword from './pages/OlvidePassword';
 import ConfirmarCuenta from './pages/ConfirmarCuenta';
 import NuevoPassword from './pages/NuevoPassword';
+import { AuthProvider } from './context/AuthProvider';
 
 function App() {
   
 
   return (
     <BrowserRouter>
+    <AuthProvider>
       <Routes>
         <Route path='/' element={<AuthLayout />}>
           <Route index element={<Login />} />
@@ -20,6 +22,7 @@ function App() {
           <Route path='confirmar/:id' element={<ConfirmarCuenta />} />
         </Route>
       </Routes>
+    </AuthProvider>
     </BrowserRouter>
   )
 };
