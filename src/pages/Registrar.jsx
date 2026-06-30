@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Alerta from "../components/Alerta";
 import PosterDeco from "../components/PosterDeco";
 import clienteAxios from "../../config/axios";
+import useAuth from '../hooks/useAuth';
 
 const Registrar = () => {
 
@@ -12,6 +13,9 @@ const Registrar = () => {
   const [repetirPassword, setRepetirPassword] = useState('');
 
   const [alerta, setAlerta] = useState({});
+
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -38,10 +42,11 @@ const Registrar = () => {
 
     // Crear el usuario en la api
     try {
-      await clienteAxios.post('/veterinarios', {nombre, email, password});
-      setAlerta({ 
-        msg: 'Creado correctamente, revisa tu email',
-        error: false});
+      const { data } = await clienteAxios.post('/veterinarios', {nombre, email, password});
+
+      localStorage.setItem('token', data.token);
+      setAuth(data);
+      navigate('/admin');
     } catch (error) {
       setAlerta({
         error: true,

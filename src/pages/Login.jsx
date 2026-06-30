@@ -31,7 +31,15 @@ const Login = () => {
       const { data } = await clienteAxios.post('/veterinarios/login', { email, password });
 
       localStorage.setItem('token', data.token);
-      setAuth(data);
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${data.token}`
+        }
+      };
+      const { data: perfil } = await clienteAxios('/veterinarios/perfil', config);
+      setAuth(perfil);
       
       navigate('/admin');
     } catch (error) {
