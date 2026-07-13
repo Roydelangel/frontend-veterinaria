@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Alerta from './Alerta';
 import usePacientes from '../hooks/usePacientes';
 
@@ -10,6 +10,7 @@ const Formulario = () => {
   const [email, setEmail] = useState('');
   const [fecha, setFecha] = useState('');
   const [sintomas, setSintomas] = useState('');
+  const [id, setId] = useState(null);
 
   const [alerta, setAlerta] = useState({});
 
@@ -24,14 +25,41 @@ const Formulario = () => {
       return;
     };
 
-    setAlerta({});
+    
 
-    guardarPaciente({ nombre, propietario, email, fecha, sintomas });
+    guardarPaciente({ nombre, propietario, email, fecha, sintomas, id});
+    setAlerta({
+      msg: 'Guardado correctamente',
+    });
+
+      const [nombre, setNombre] = useState('');
+
+    setNombre('');
+    setPropietario('');
+    setEmail('');
+    setFecha('');
+    setSintomas('');
+    setId('');
+
   };
 
   const { msg } = alerta;
 
-  const { guardarPaciente } = usePacientes();
+  const { guardarPaciente, paciente } = usePacientes();
+
+  useEffect(() => {
+    if (paciente?.nombre) {
+      setNombre(paciente.nombre);
+      setPropietario(paciente.propietario);
+      setEmail(paciente.email);
+      setFecha(paciente.fecha);
+      setSintomas(paciente.sintomas);
+      setSintomas(paciente.sintomas);
+      setId(paciente._id);
+
+    }
+  }, [paciente]);
+  
 
   return (
     <>
@@ -45,7 +73,7 @@ const Formulario = () => {
     onSubmit={handleSubmit}>
       <div className='mb-5'>
         <label htmlFor='nombre' className='text-gray-700 uppercase font-bold'>Nombre Mascota</label>
-        <input id='nombre' type='text' placeholder='Nombre de la mascota' 
+        <input id='nombre' type='text' placeholder='Nombre de la mascota'
         className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md'
         value={nombre}
         onChange={e => setNombre(e.target.value)}/>
@@ -82,7 +110,7 @@ const Formulario = () => {
         onChange={e => setSintomas(e.target.value)}/>
       </div>
 
-      <input type='submit' value='Agregar Paciente' 
+      <input type='submit' value={id ? 'Guardar Cambios' : 'Agregar Paciente'} 
       className='bg-indigo-600 hover:bg-indigo-600 cursor-pointer transition-color w-full p-3 text-white uppercase font-bold'/>
 
     </form>

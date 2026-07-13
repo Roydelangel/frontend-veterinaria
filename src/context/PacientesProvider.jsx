@@ -6,6 +6,7 @@ const PacientesContext = createContext();
 export const PacientesProvider = ({children}) => {
 
     const [pacientes, setPacientes] = useState([]);
+    const [paciente, setPaciente] = useState({});
 
     useEffect(() => {
       const obtenerPacientes = async () => {
@@ -17,7 +18,6 @@ export const PacientesProvider = ({children}) => {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
-
                 }
             };
 
@@ -33,30 +33,60 @@ export const PacientesProvider = ({children}) => {
     
 
     const guardarPaciente = async (paciente) => {
-        try {
-            const token = localStorage.getItem('token');
 
-            const config = {
+        const config = {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
-
                 }
-            };
+        };
+
+        if (paciente.id) {
+            try {
+                const { data } = await clienteAxios.put(`/pacientes/${paciente.id}`, paciente, config);
+
+                const pacienteActualizado = pacientes.map( pacienteState => pacienteState._id === data._id ? data : pacienteState);
+                setPacientes(pacienteActualizado);
+
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            try {
+            const token = localStorage.getItem('token');
+
             const { data } = await clienteAxios.post('/pacientes', paciente, config);
 
             const { createdAt, updateAt, __v, ...pacienteAlmacenado} = data;
             setPacientes([pacienteAlmacenado, ...pacientes]);
-        } catch (error) {
-            
-        }
+            } catch (error) {
+            console.log(error);
+            };
+        };
+
+        
+    };
+
+    const setEdicion = (paciente) => {
+        setPaciente(paciente);
+    };
+
+    const eliminarPaciente = id => {
+        const confirmar = confirm('Deseas eliminar un paciente?');
+
+        if (confirmar) {
+              
+        };
     };
 
     return (
         <PacientesContext.Provider
         value={{
             pacientes,
-            guardarPaciente
+            guardarPaciente,
+            setEdicion,
+            paciente,
+            eliminarPaciente
         }}>
 
         { children }
